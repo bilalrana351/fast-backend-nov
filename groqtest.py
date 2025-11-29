@@ -2,18 +2,26 @@ import os
 import sys
 from groq import Groq
 from dotenv import load_dotenv
+from supabase import create_client, Client
 
 load_dotenv()
 
 
 API_KEY = os.getenv("GROQ_API_KEY")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
 if not API_KEY:
     print("❌ Error: GROQ_API_KEY not found.")
     print("Run: export GROQ_API_KEY='gsk_...'")
     sys.exit(1)
 
+if not SUPABASE_URL or not SUPABASE_KEY:
+    print("❌ Error: Supabase credentials not found.")
+    sys.exit(1)
+
 client = Groq(api_key=API_KEY)
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Use Groq's Agentic Model which has built-in web search tools
 
@@ -105,9 +113,64 @@ def main():
     print("--- ⚡ Groq 'Compound' Deep Research Agent (Realtime Search) ---")
     
     try:
+        # Fetch available resumes
+        resumes_response = supabase.table("resume_details").select("resume_id").execute()
+        if resumes_response.data:
+            print("\nAvailable resumes to test:")
+            for resume in resumes_response.data:
+                print(f"- {resume['resume_id']}")
+        else:
+            print("\nNo resumes found to test.")
+            return
+
+        resume_id_to_test = input("\nEnter the resume_id you want to use for the test: ").strip()
+
+        # Fetch the selected resume details
+        resume_details_response = supabase.table("resume_details").select("*").eq("resume_id", resume_id_to_test).execute()
+        
+        if not resume_details_response.data:
+            print(f"\n❌ Error: Resume with id '{resume_id_to_test}' not found.")
+            return
+
+        resume_data = resume_details_response.data[0]
+
+        # Format the resume data into a string
+        resume_string = f"Resume ID: {resume_data.get('resume_id')}\n"
+        
+        skills = resume_data.get('skills')
+        if skills:
+            resume_string += f"Skills: {', '.join(skills)}\n"
+            
+        experience = resume_data.get('experience')
+        if experience:
+            resume_string += "Experience:\n"
+            for exp in experience:
+                resume_string += f"  - Company: {exp.get('company')}, Role: {exp.get('role')}, Years: {exp.get('years')}\n"
+
+        education = resume_data.get('education')
+        if education:
+            resume_string += "Education:\n"
+            for edu in education:
+                resume_string += f"  - School: {edu.get('school')}, Degree: {edu.get('degree')}, Year: {edu.get('year')}\n"
+        
+        projects = resume_data.get('projects')
+        if projects:
+            resume_string += "Projects:\n"
+            for proj in projects:
+                resume_string += f"  - Name: {proj.get('name')}, Tech: {proj.get('tech')}, Description: {proj.get('desc')}\n"
+
+        print("\n--- Extracted Resume Details ---")
+        print(resume_string)
+        print("---------------------------------")
+
+
         c_name = input("1. Target Company Name: ").strip()
         c_role = input("2. Role Applying For:   ").strip()
-        c_tech = input("3. Tech Stack / Skills: ").strip()
+        
+        # For tech stack, we can now use the skills from the resume
+        c_tech = ", ".join(resume_data.get('skills', []))
+        print(f"3. Tech Stack / Skills (from resume): {c_tech}")
+
 
         if not all([c_name, c_role, c_tech]):
             print("\n❌ Error: All fields are required.")
