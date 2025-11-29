@@ -181,7 +181,8 @@ async def analyze_resume(request: ResumeAnalyzeRequest):
             skills=structured_data.get("skills", []),
             experience=structured_data.get("experience", []),
             education=structured_data.get("education", []),
-            projects=structured_data.get("projects", [])
+            projects=structured_data.get("projects", []),
+            location=structured_data.get("location")
         )
         
         return ResumeAnalyzeResponse(
@@ -314,9 +315,19 @@ async def recommend_jobs(request: JobRecommendRequest):
             # Use top skill
             query = f"{resume_details['skills'][0]} Developer"
             
+        # Determine location
+        location = request.location
+        if not location or location.lower() == "remote":
+            # Try to get location from resume if not explicitly provided or if default "Remote"
+            # Note: The frontend might send "Remote" as default, so we check if resume has a better location
+            if resume_details.get("location"):
+                location = resume_details["location"]
+            elif not location:
+                location = "Remote"
+            
         # Search jobs
-        print(f"Searching for jobs: {query} in {request.location}")
-        raw_jobs = await job_service.search_jobs(query, request.location)
+        print(f"Searching for jobs: {query} in {location}")
+        raw_jobs = await job_service.search_jobs(query, location)
         
         if not raw_jobs:
             return JobRecommendResponse(success=True, message="No jobs found", jobs=[])

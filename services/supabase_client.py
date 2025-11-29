@@ -15,7 +15,8 @@ class SupabaseService:
         skills: List[str],
         experience: List[Dict[str, Any]],
         education: List[Dict[str, Any]],
-        projects: List[Dict[str, Any]]
+        projects: List[Dict[str, Any]],
+        location: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Insert parsed resume details into the resume_details table
@@ -26,6 +27,7 @@ class SupabaseService:
             experience: List of experience dictionaries
             education: List of education dictionaries
             projects: List of project dictionaries
+            location: Extracted location string
         
         Returns:
             Dictionary with the inserted record
@@ -37,6 +39,7 @@ class SupabaseService:
                 "experience": experience,
                 "education": education,
                 "projects": projects,
+                "location": location,
                 "parsed_at": datetime.utcnow().isoformat()
             }
             
