@@ -1,0 +1,290 @@
+{
+  "user_profile": {
+    "skills": [
+      "restful",
+      "typescript",
+      "kubernetes",
+      "microservices",
+      "git",
+      "java",
+      "javascript",
+      "agile",
+      "node.js",
+      "aws",
+      "api",
+      "docker",
+      "react",
+      "ci/cd",
+      "python",
+      "sql"
+    ],
+    "experience_years": 4,
+    "location": "Pakistan",
+    "job_title": "Software Engineer"
+  },
+  "total_jobs_found": 4,
+  "matched_jobs": [
+    {
+      "job_id": "eyJqb2JfdGl0bGUiOiJQcmluY2lwYWwgU29mdHdhcmUgRW5naW5lZXIgKEJhY2tlbmQgTm9kZSAvIE5lc3RqcykgUEFLIiwiY29tcGFueV9uYW1lIjoiV2l6ZGFhIiwiYWRkcmVzc19jaXR5IjoiUGFraXN0YW4iLCJodGlkb2NpZCI6IjhhNlZiN2F5ZFZhNFIzZU5BQUFBQUE9PSIsInV1bGUiOiJ3K0NBSVFJQ0lJVUdGcmFYTjBZVzQifQ==",
+      "title": "Principal Software Engineer (Backend Node / Nestjs) PAK",
+      "company_name": "Wizdaa",
+      "location": "Anywhere",
+      "source": "Wizdaa",
+      "posted_at": "1 day ago",
+      "salary": null,
+      "schedule_type": "Contractor",
+      "compatibility_score": 65.25,
+      "score_breakdown": {
+        "skill_match": 60.0,
+        "experience_match": 55,
+        "location_match": 100,
+        "education_match": 100,
+        "additional_factors": 50
+      },
+      "match_explanations": [
+        "Good match (65.25% compatibility)",
+        "Skills match: You have 9/15 required skills (typescript, restful, microservices, git, javascript)",
+        "Missing skills: mongodb, backend, mysql (mentioned in job requirements)",
+        "Experience level: Job requires senior level (you have mid level based on 4 years) - 55% match",
+        "Location: Anywhere - Good match"
+      ],
+      "matching_skills": [
+        "typescript",
+        "restful",
+        "microservices",
+        "git",
+        "javascript",
+        "node.js",
+        "api",
+        "docker",
+        "ci/cd"
+      ],
+      "missing_skills": [
+        "mongodb",
+        "backend",
+        "mysql",
+        "graphql",
+        "nestjs",
+        "express"
+      ],
+      "required_skills": [
+        "typescript",
+        "restful",
+        "mongodb",
+        "microservices",
+        "git",
+        "backend",
+        "mysql",
+        "javascript",
+        "graphql",
+        "node.js",
+        "api",
+        "docker",
+        "ci/cd",
+        "nestjs",
+        "express"
+      ],
+      "experience_requirement": {
+        "min_years": null,
+        "max_years": null,
+        "level": "senior"
+      },
+      "apply_link": "https://wizdaa.recruitee.com/o/principal-software-engineer-backend-node-nestjs-pak?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "description_preview": "Job Description: Senior Backend Developer\n\nLet's be direct: We're looking for a technical powerhouse. If you're the developer who:\n\u2022 Is the clear technical leader on your team\n\u2022 Consistently solves pr..."
+    },
+    {
+      "job_id": "eyJqb2JfdGl0bGUiOiJTZW5pb3IvU3RhZmYgU29mdHdhcmUgRW5naW5lZXIiLCJjb21wYW55X25hbWUiOiJWZWN0YXJhIiwiYWRkcmVzc19jaXR5IjoiUGFraXN0YW4iLCJodGlkb2NpZCI6ImkyUTI5aEJOZnBtRllNcXRBQUFBQUE9PSIsInV1bGUiOiJ3K0NBSVFJQ0lJVUdGcmFYTjBZVzQifQ==",
+      "title": "Senior/Staff Software Engineer",
+      "company_name": "Vectara",
+      "location": "Pakistan",
+      "source": "Recruit.net",
+      "posted_at": "2 days ago",
+      "salary": null,
+      "schedule_type": "Full-time",
+      "compatibility_score": 64.5,
+      "score_breakdown": {
+        "skill_match": 30.0,
+        "experience_match": 100,
+        "location_match": 100,
+        "education_match": 100,
+        "additional_factors": 50
+      },
+      "match_explanations": [
+        "Good match (64.5% compatibility)",
+        "Skills match: You have 6/20 required skills (kubernetes, aws, docker, ci/cd, python)",
+        "Missing skills: mongodb, spark, kafka (mentioned in job requirements)",
+        "Experience level: Job requires 2+ years (senior level) - 100% match",
+        "Location: Pakistan - Good match"
+      ],
+      "matching_skills": [
+        "kubernetes",
+        "aws",
+        "docker",
+        "ci/cd",
+        "python",
+        "java"
+      ],
+      "missing_skills": [
+        "mongodb",
+        "spark",
+        "kafka",
+        "nlp",
+        "backend",
+        "devops",
+        "gcp",
+        "ml",
+        "ai",
+        "go",
+        "terraform",
+        "airflow",
+        "azure",
+        "security"
+      ],
+      "required_skills": [
+        "devops",
+        "gcp",
+        "kubernetes",
+        "azure",
+        "security",
+        "go",
+        "aws",
+        "docker",
+        "java",
+        "mongodb",
+        "spark",
+        "ml",
+        "ai",
+        "terraform",
+        "python",
+        "airflow",
+        "kafka",
+        "nlp",
+        "backend",
+        "ci/cd"
+      ],
+      "experience_requirement": {
+        "min_years": 2,
+        "max_years": 5,
+        "level": "senior"
+      },
+      "apply_link": "https://www.recruit.net/job/staff-software-engineer-jobs/C7A2090AA4FEAD80?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "description_preview": "Vectara provides a scalable platform to deploy your Enterprise AI Agents and AI Assistants with Accuracy, Security, and Explainability like no other solution. Our enterprise RAG and Agentic AI Platfor..."
+    },
+    {
+      "job_id": "eyJqb2JfdGl0bGUiOiJTb2Z0d2FyZSBFbmdpbmVlciBJSUkgKEMrKyB3aXRoIFNTTCkiLCJjb21wYW55X25hbWUiOiJmNSIsImFkZHJlc3NfY2l0eSI6IlBha2lzdGFuIiwiaHRpZG9jaWQiOiIwWXZvY0FHcWhCUkNKQnRQQUFBQUFBPT0iLCJ1dWxlIjoidytDQUlRSUNJSVVHRnJhWE4wWVc0In0=",
+      "title": "Software Engineer III (C++ with SSL)",
+      "company_name": "f5",
+      "location": "Pakistan",
+      "source": "Indeed",
+      "posted_at": "3 days ago",
+      "salary": null,
+      "schedule_type": "Full-time",
+      "compatibility_score": 62.5,
+      "score_breakdown": {
+        "skill_match": 25.0,
+        "experience_match": 100,
+        "location_match": 100,
+        "education_match": 100,
+        "additional_factors": 50
+      },
+      "match_explanations": [
+        "Good match (62.5% compatibility)",
+        "Skills match: You have 2/8 required skills (python, agile)",
+        "Missing skills: tls, c++, http (mentioned in job requirements)",
+        "Experience level: Job requires mid level (you have mid level based on 4 years) - 100% match",
+        "Location: Pakistan - Good match"
+      ],
+      "matching_skills": [
+        "python",
+        "agile"
+      ],
+      "missing_skills": [
+        "tls",
+        "c++",
+        "http",
+        "ssl",
+        "tcp/ip",
+        "security"
+      ],
+      "required_skills": [
+        "tls",
+        "c++",
+        "http",
+        "ssl",
+        "agile",
+        "python",
+        "tcp/ip",
+        "security"
+      ],
+      "experience_requirement": {
+        "min_years": null,
+        "max_years": null,
+        "level": "mid"
+      },
+      "apply_link": "https://pk.indeed.com/viewjob?jk=0c9adb399811a4b0&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "description_preview": "At F5, we strive to bring a better digital world to life. Our teams empower organizations across the globe to create, secure, and run applications that enhance how we experience our evolving digital w..."
+    },
+    {
+      "job_id": "eyJqb2JfdGl0bGUiOiJTZW5pb3IgTGVhZCBTb2Z0d2FyZSBFbmdpbmVlciAtIEphdmEsIEFuc2libGUiLCJjb21wYW55X25hbWUiOiJKUCBNb3JnYW4gQ2hhc2UiLCJhZGRyZXNzX2NpdHkiOiJQYWtpc3RhbiIsImh0aWRvY2lkIjoidWcxUXF6cmN3TjNoTzFWUUFBQUFBQT09IiwidXVsZSI6IncrQ0FJUUlDSUlVR0ZyYVhOMFlXNCJ9",
+      "title": "Senior Lead Software Engineer - Java, Ansible",
+      "company_name": "JP Morgan Chase",
+      "location": "Pakistan",
+      "source": "Bayt.com",
+      "posted_at": "3 days ago",
+      "salary": null,
+      "schedule_type": "Full-time",
+      "compatibility_score": 48.33,
+      "score_breakdown": {
+        "skill_match": 33.33,
+        "experience_match": 30,
+        "location_match": 100,
+        "education_match": 100,
+        "additional_factors": 50
+      },
+      "match_explanations": [
+        "Moderate match (48.33% compatibility)",
+        "Skills match: You have 3/9 required skills (restful, java, agile)",
+        "Missing skills: spring, mobile, kafka (mentioned in job requirements)",
+        "Experience level: Job requires 15+ years (senior level) - 30% match",
+        "Location: Pakistan - Good match"
+      ],
+      "matching_skills": [
+        "restful",
+        "java",
+        "agile"
+      ],
+      "missing_skills": [
+        "spring",
+        "mobile",
+        "kafka",
+        "ansible",
+        "machine learning",
+        "web"
+      ],
+      "required_skills": [
+        "spring",
+        "restful",
+        "mobile",
+        "kafka",
+        "ansible",
+        "agile",
+        "java",
+        "web",
+        "machine learning"
+      ],
+      "experience_requirement": {
+        "min_years": 15,
+        "max_years": 15,
+        "level": "senior"
+      },
+      "apply_link": "https://www.bayt.com/en/pakistan/jobs/senior-lead-software-engineer-java-ansible-73703640/?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "description_preview": "Be an integral part of an agile team that's constantly pushing the envelope to enhance, build, and deliver top-notch technology products.\n\nAs a Senior Lead Software Engineer at JPMorganChase within th..."
+    }
+  ],
+  "summary": {
+    "average_score": 60.14,
+    "high_match_count": 0,
+    "medium_match_count": 4,
+    "low_match_count": 0
+  }
+}
