@@ -10,7 +10,7 @@ class JobService:
     def __init__(self, groq_api_key: str, serp_api_key: str):
         self.groq_client = AsyncGroq(api_key=groq_api_key)
         self.serp_api_key = serp_api_key
-        self.model = "llama-3.3-70b-versatile"
+        self.model = "moonshotai/kimi-k2-instruct-0905"
         
     async def search_jobs(self, query: str, location: str, num_results: int = 10) -> List[Dict[str, Any]]:
         """
