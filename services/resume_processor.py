@@ -55,6 +55,7 @@ class ResumeProcessor:
 
 The JSON should have this exact structure:
 {{
+  "location": "City, Country (or 'Remote' if explicitly stated, or null if not found)",
   "skills": ["skill1", "skill2", ...],
   "experience": [
     {{"company": "Company Name", "role": "Job Title", "duration": "Start Date - End Date", "description": "Brief description of responsibilities"}}
@@ -68,6 +69,7 @@ The JSON should have this exact structure:
 }}
 
 Rules:
+- Extract the candidate's current location (City, Country/State). If not found, set to null.
 - Extract ALL skills mentioned (technical skills, tools, frameworks, languages, etc.)
 - For experience, include all job positions with company, role, duration, and key responsibilities
 - For education, include all degrees, certifications, and relevant coursework
@@ -112,6 +114,12 @@ Resume text:
             
             # Validate structure
             required_keys = ["skills", "experience", "education", "projects"]
+            # location is optional in the sense that it might be null, but the key should exist if the LLM follows instructions.
+            # However, to be safe, we won't strictly enforce it as a required key that MUST be present to avoid breaking existing logic if LLM fails slightly.
+            # But let's add it to the default check if we want to ensure it exists in the output dictionary.
+            if "location" not in structured_data:
+                structured_data["location"] = None
+
             for key in required_keys:
                 if key not in structured_data:
                     structured_data[key] = []
