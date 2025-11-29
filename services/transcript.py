@@ -74,39 +74,54 @@ async def get_transcript(request: Request):
     
     analysis = json.loads(response.choices[0].message.content)
     
-    # Override call_type from variableValues if present
-    # Check call.assistantOverrides.variableValues first (priority)
-    call_type_override = body.get("message", {}).get("call", {}).get("assistantOverrides", {}).get("variableValues", {}).get("call_type")
+    # Extract variables safely
+    message = body.get("message", {})
+    call = message.get("call", {})
+    assistant = message.get("assistant", {})
     
-    user_id = body.get("message", {}).get("call", {}).get("assistantOverrides", {}).get("variableValues", {}).get("user_id")
-   
-    # Fallback to assistant.variableValues
-    if not call_type_override:
-        call_type_override = body.get("message", {}).get("assistant", {}).get("variableValues", {}).get("call_type")
-
-    if not user_id:
-        user_id = body.get("message", {}).get("assistant", {}).get("variableValues", {}).get("user_id")
+    call_overrides = call.get("assistantOverrides") or {}
+    call_vars = call_overrides.get("variableValues") or {}
+    assistant_vars = assistant.get("variableValues") or {}
+    
+    # Get user_id with fallback
+    user_id = call_vars.get("user_id") or assistant_vars.get("user_id")
+    
+    # Get call_type with fallback
+    call_type_override = call_vars.get("call_type") or assistant_vars.get("call_type")
         
     if call_type_override:
         print(f"Overriding call_type with: {call_type_override}")
         analysis["call_type"] = call_type_override
         
     print("Analysis:", analysis)
+    print(f"Extracted user_id: {user_id}")
 
-    try:
-        data = {
-            "id": call_id,
-            "user_id": user_id,
-            "strengths": analysis.get("strengths", []),
-            "weaknesses": analysis.get("weaknesses", []),
-            "passed": analysis.get("passed", False),
-            "call_type": analysis.get("call_type", "technical")
-        }
-        supabase.table("call_reports").insert(data).execute()
-        print("Stored call report in Supabase")
-    except Exception as e:
-        print(f"Error storing call report: {e}")
+    if user_id:
+        try:
+            data = {
+                "id": call_id,
+                "user_id": user_id,
+                "strengths": analysis.get("strengths", []),
+                "weaknesses": analysis.get("weaknesses", []),
+                "passed": analysis.get("passed", False),
+                "call_type": analysis.get("call_type", "technical")
+            }
+            supabase.table("call_reports").insert(data).execute()
+            print("Stored call report in Supabase")
+        except Exception as e:
+            print(f"Error storing call report: {e}")
     else:
         print("No user_id found, skipping Supabase storage")
 
     return {"received_body": body, "transcript": transcript, "analysis": analysis}
+
+@router.get("/api/call-report/{call_id}")
+async def get_call_report(call_id: str):
+    try:
+        result = supabase.table("call_reports").select("*").eq("id", call_id).execute()
+        if not result.data:
+            raise HTTPException(status_code=404, detail="Call report not found")
+        return result.data[0]
+    except Exception as e:
+        print(f"Error fetching call report: {e}")
+        raise HTTPException(status_code=500, detail=f"Error fetching call report: {str(e)}")

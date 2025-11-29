@@ -13,6 +13,7 @@ load_dotenv()
 from services.resume_processor import ResumeProcessor
 from services.supabase_client import SupabaseService
 from services.job_service import JobService
+from services.deep_research_service import DeepResearchService
 
 app = FastAPI(
     title="Backend API",
@@ -42,6 +43,7 @@ if not groq_api_key or not supabase_url or not supabase_key:
 resume_processor = ResumeProcessor(groq_api_key)
 supabase_service = SupabaseService(supabase_url, supabase_key)
 job_service = JobService(groq_api_key, serp_api_key)
+deep_research_service = DeepResearchService(groq_api_key)
 
 
 # Pydantic models
@@ -108,6 +110,18 @@ class JobRecommendResponse(BaseModel):
     jobs: List[Dict[str, Any]]
 
 
+class DeepResearchRequest(BaseModel):
+    company_name: str
+    role: str
+    technologies: str
+
+
+class DeepResearchResponse(BaseModel):
+    success: bool
+    message: str
+    data: Optional[Dict[str, Any]] = None
+
+
 # Routes
 @app.get("/")
 async def root():
@@ -130,7 +144,7 @@ async def hello():
     return MessageResponse(message="Hello from backend!")
 
 
-from transcript import router as transcript_router
+from services.transcript import router as transcript_router
 app.include_router(transcript_router)
 
 @app.post("/api/resume/analyze", response_model=ResumeAnalyzeResponse)
@@ -324,6 +338,31 @@ async def recommend_jobs(request: JobRecommendRequest):
         raise HTTPException(
             status_code=500,
             detail=f"Failed to recommend jobs: {str(e)}"
+        )
+
+
+@app.post("/api/deep-research", response_model=DeepResearchResponse)
+async def deep_research(request: DeepResearchRequest):
+    """
+    Perform deep research on a company and role
+    """
+    try:
+        result, _ = await deep_research_service.perform_deep_research(
+            request.company_name,
+            request.role,
+            request.technologies
+        )
+        
+        return DeepResearchResponse(
+            success=True,
+            message="Deep research completed successfully",
+            data=result
+        )
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to perform deep research: {str(e)}"
         )
 
 if __name__ == "__main__":
