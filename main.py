@@ -12,6 +12,7 @@ load_dotenv()
 # Import services
 from services.resume_processor import ResumeProcessor
 from services.supabase_client import SupabaseService
+from services.job_service import JobService
 
 app = FastAPI(
     title="Backend API",
@@ -31,6 +32,7 @@ app.add_middleware(
 
 # Initialize services
 groq_api_key = os.getenv("GROQ_API_KEY")
+serp_api_key = os.getenv("SERP_API_KEY")
 supabase_url = os.getenv("SUPABASE_URL")
 supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
@@ -39,6 +41,7 @@ if not groq_api_key or not supabase_url or not supabase_key:
 
 resume_processor = ResumeProcessor(groq_api_key)
 supabase_service = SupabaseService(supabase_url, supabase_key)
+job_service = JobService(groq_api_key, serp_api_key)
 
 
 # Pydantic models
@@ -91,6 +94,18 @@ class ResumeDetailsResponse(BaseModel):
     education: List[Dict[str, Any]]
     projects: List[Dict[str, Any]]
     parsed_at: str
+
+
+class JobRecommendRequest(BaseModel):
+    resume_id: str
+    user_id: str
+    location: Optional[str] = "Remote"
+
+
+class JobRecommendResponse(BaseModel):
+    success: bool
+    message: str
+    jobs: List[Dict[str, Any]]
 
 
 # Routes
@@ -234,12 +249,78 @@ async def delete_resume(resume_id: str, user_id: str):
                 detail="Failed to delete resume"
             )
             
-    except HTTPException as he:
-        raise he
     except Exception as e:
         raise HTTPException(
             status_code=500,
             detail=f"Failed to delete resume: {str(e)}"
+        )
+
+
+@app.post("/api/jobs/recommend", response_model=JobRecommendResponse)
+async def recommend_jobs(request: JobRecommendRequest):
+    """
+    Recommend jobs based on resume analysis
+    
+    Flow:
+    1. Verify ownership
+    2. Fetch parsed resume details
+    3. Determine search query from resume (e.g. most recent role or top skill)
+    4. Search jobs via SerpAPI
+    5. Score jobs via Groq
+    """
+    try:
+        # Verify ownership
+        is_owner = await supabase_service.verify_resume_ownership(request.resume_id, request.user_id)
+        if not is_owner:
+            raise HTTPException(status_code=403, detail="Unauthorized")
+            
+        # Fetch resume details
+        resume_details = await supabase_service.get_resume_details(request.resume_id)
+        if not resume_details:
+            raise HTTPException(status_code=404, detail="Resume details not found. Please analyze the resume first.")
+            
+        # Determine search query
+        # Strategy: Use the most recent job title, or top skill, or default to "Software Engineer"
+        query = "Software Engineer"
+        
+        if resume_details.get("experience") and len(resume_details["experience"]) > 0:
+            # Use most recent role
+            role = resume_details["experience"][0].get("role", "Software Engineer")
+            query = role
+            
+            # Append top skill if available for better targeting
+            if resume_details.get("skills") and len(resume_details["skills"]) > 0:
+                top_skill = resume_details["skills"][0]
+                query = f"{role} {top_skill}"
+                
+        elif resume_details.get("skills") and len(resume_details["skills"]) > 0:
+            # Use top skill
+            query = f"{resume_details['skills'][0]} Developer"
+            
+        # Search jobs
+        print(f"Searching for jobs: {query} in {request.location}")
+        raw_jobs = await job_service.search_jobs(query, request.location)
+        
+        if not raw_jobs:
+            return JobRecommendResponse(success=True, message="No jobs found", jobs=[])
+            
+        # Score jobs (limit to top 5 to save tokens/time)
+        top_jobs = raw_jobs[:5]
+        scored_jobs = await job_service.score_jobs_with_groq(resume_details, top_jobs)
+        
+        return JobRecommendResponse(
+            success=True,
+            message=f"Found and scored {len(scored_jobs)} jobs",
+            jobs=scored_jobs
+        )
+        
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        print(f"Job recommendation error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to recommend jobs: {str(e)}"
         )
 
 
