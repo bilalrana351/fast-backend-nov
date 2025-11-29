@@ -52,6 +52,10 @@ async def hello():
     return MessageResponse(message="Hello from backend!")
 
 
+# Import and include the transcript router
+from transcript import router as transcript_router
+app.include_router(transcript_router)
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
