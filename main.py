@@ -304,8 +304,9 @@ async def recommend_jobs(request: JobRecommendRequest):
         if not raw_jobs:
             return JobRecommendResponse(success=True, message="No jobs found", jobs=[])
             
-        # Score jobs (only top 3 will be scored by LLM, rest will be mapped)
-        scored_jobs = await job_service.score_jobs_with_groq(resume_details, raw_jobs)
+        # Score jobs (limit to top 5 to save tokens/time)
+        top_jobs = raw_jobs[:5]
+        scored_jobs = await job_service.score_jobs_with_groq(resume_details, top_jobs)
         
         return JobRecommendResponse(
             success=True,

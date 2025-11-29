@@ -52,13 +52,9 @@ class JobService:
         """
         Score jobs based on resume compatibility using Groq
         """
-        # Only score the top 3 jobs to save tokens and time
-        jobs_to_score = jobs[:3]
-        remaining_jobs = jobs[3:]
-        
         # Prepare a simplified list of jobs for the LLM to reduce token usage
         jobs_for_prompt = []
-        for job in jobs_to_score:
+        for job in jobs:
             jobs_for_prompt.append({
                 "job_id": job.get("job_id"),
                 "title": job.get("title"),
@@ -111,8 +107,6 @@ class JobService:
         }}
         """
         
-        scored_jobs = []
-        
         try:
             chat_completion = await self.groq_client.chat.completions.create(
                 messages=[
@@ -134,8 +128,9 @@ class JobService:
             result = json.loads(content)
             scores_map = {item["job_id"]: item for item in result.get("scores", [])}
             
-            # Process scored jobs
-            for job in jobs_to_score:
+            # Merge scores back into original job objects
+            scored_jobs = []
+            for job in jobs:
                 job_id = job.get("job_id")
                 score_info = scores_map.get(job_id, {
                     "score": 0, 
@@ -154,8 +149,6 @@ class JobService:
                     "description": job.get("description"),
                     "thumbnail": job.get("thumbnail"),
                     "extensions": job.get("detected_extensions", {}),
-                    "posted_at": job.get("detected_extensions", {}).get("posted_at"),
-                    "salary": job.get("detected_extensions", {}).get("salary"),
                     "apply_link": job.get("apply_options", [{}])[0].get("link") if job.get("apply_options") else None,
                     "compatibility_score": score_info.get("score", 0),
                     "match_explanation": score_info.get("explanation", "No explanation available"),
@@ -164,33 +157,9 @@ class JobService:
                 }
                 scored_jobs.append(scored_job)
                 
-        except Exception as e:
-            print(f"Error scoring jobs with Groq: {e}")
-            # Fallback: treat all jobs as unscored if LLM fails
-            remaining_jobs = jobs # If scoring fails, treat all as remaining
-            scored_jobs = []
-
-        # Process remaining jobs (unscored)
-        for job in remaining_jobs:
-             scored_jobs.append({
-                "job_id": job.get("job_id"),
-                "title": job.get("title"),
-                "company_name": job.get("company_name"),
-                "location": job.get("location"),
-                "via": job.get("via"),
-                "description": job.get("description"),
-                "thumbnail": job.get("thumbnail"),
-                "extensions": job.get("detected_extensions", {}),
-                "posted_at": job.get("detected_extensions", {}).get("posted_at"),
-                "salary": job.get("detected_extensions", {}).get("salary"),
-                "apply_link": job.get("apply_options", [{}])[0].get("link") if job.get("apply_options") else None,
-                "compatibility_score": None,
-                "match_explanation": None,
-                "key_requirements": [],
-                "alignment": None
-            })
-            
-        return scored_jobs
+            # Sort by score descending
+            scored_jobs.sort(key=lambda x: x["compatibility_score"], reverse=True)
+            return scored_jobs
             
         except Exception as e:
             print(f"Error scoring jobs with Groq: {e}")
