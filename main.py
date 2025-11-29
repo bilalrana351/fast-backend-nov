@@ -130,6 +130,9 @@ async def hello():
     return MessageResponse(message="Hello from backend!")
 
 
+from transcript import router as transcript_router
+app.include_router(transcript_router)
+
 @app.post("/api/resume/analyze", response_model=ResumeAnalyzeResponse)
 async def analyze_resume(request: ResumeAnalyzeRequest):
     """
@@ -322,7 +325,6 @@ async def recommend_jobs(request: JobRecommendRequest):
             status_code=500,
             detail=f"Failed to recommend jobs: {str(e)}"
         )
-
 
 if __name__ == "__main__":
     import uvicorn
